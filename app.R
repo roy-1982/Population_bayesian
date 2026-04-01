@@ -40,19 +40,15 @@ ui <- page_sidebar(
   ),
   tags$head(
     tags$style(HTML("
-    /* 進捗通知の『×』ボタンをピンポイントで消去 */
       .shiny-notification-close {
         display: none !important;
       }
-      /* 万が一のための予備設定（古いクラス名も念のため） */
       .shiny-progress .progress-close {
         display: none !important;
       }
-      /* 通知全体を「触れない（クリック不可）」にする */
       .shiny-notification {
         pointer-events: none !important;
       }
-      /* 通知内の閉じるボタンを完全に消す */
        .shiny-notification-close {
         display: none !important;
       }
@@ -63,8 +59,6 @@ ui <- page_sidebar(
       .popover-body {
         color: #ffffff !important;
       }
-      
-      /* アイコンを点滅（パルス）させるアニメーション */
       .blink-icon svg, .blink-icon i {
         animation: blink-animation 1.5s infinite ease-in-out;
       }
