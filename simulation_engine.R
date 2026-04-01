@@ -2,16 +2,15 @@
 
 predict_pop_stochastic <- function(base_pop, avg_alpha, sd_alpha, move_pattern, f_table, survival_table, periods = 24, move_adj = 0, edu_impact = 0, stochastic = TRUE, edu_growth_base) {
   
-  # --- 101要素（0-100歳）のインデックスを作成 ---
+  # 101要素（0-100歳）のインデックスを作成
   target_ages <- 0:100
   
-  # 基本人口を101要素に強制整形（足りない年齢は0、超える分はカット）
+  # 基本人口を101要素に強制整形
   m_pop_raw <- base_pop %>% filter(性別 == "M")
   f_pop_raw <- base_pop %>% filter(性別 == "F")
   
   m_pop <- numeric(101)
   f_pop <- numeric(101)
-  # matchを使って、データの年齢がtarget_agesのどこに該当するか紐付け
   m_pop[m_pop_raw$年齢 + 1] <- m_pop_raw$人口
   f_pop[f_pop_raw$年齢 + 1] <- f_pop_raw$人口
   
@@ -21,7 +20,7 @@ predict_pop_stochastic <- function(base_pop, avg_alpha, sd_alpha, move_pattern, 
   f_surv_raw <- survival_table %>% filter(性別 == "F")
   m_surv[m_surv_raw$年齢 + 1] <- m_surv_raw$生残率
   f_surv[f_surv_raw$年齢 + 1] <- f_surv_raw$生残率
-  # 100歳以上の生存率がNAなら0にする
+  # 100歳以上の生存率がNAなら0に
   m_surv[is.na(m_surv)] <- 0; f_surv[is.na(f_surv)] <- 0
   
   # 出生率ベクトル（101要素）
@@ -35,7 +34,7 @@ predict_pop_stochastic <- function(base_pop, avg_alpha, sd_alpha, move_pattern, 
   m_move[pmin(m_move_raw$年齢 + 1, 101)] <- m_move_raw$move_per_age
   f_move[pmin(f_move_raw$年齢 + 1, 101)] <- f_move_raw$move_per_age
   
-  # --- 教育トレードオフの適用 ---
+  # 教育トレードオフの適用
   # (南伊豆の規模に合わせて係数250で調整)
   drain_val <- edu_growth_base * edu_impact * 250
   m_move[19] <- m_move[19] - drain_val
@@ -44,7 +43,7 @@ predict_pop_stochastic <- function(base_pop, avg_alpha, sd_alpha, move_pattern, 
   # 進学による流出の約40%が、別の「教育重視ファミリー」として転入してくる仮定
   attract_val <- (drain_val * 0.4)
   
-  # --- 正規分布による重み付け関数の定義 ---
+  # 正規分布による重み付け関数
   get_norm_weight <- function(ages, mean_age, sd) {
     w <- dnorm(ages, mean = mean_age, sd = sd)
     return(w / sum(w)) 
