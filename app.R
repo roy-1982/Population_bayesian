@@ -152,12 +152,12 @@ ui <- page_sidebar(
                 font-weight: bold; 
                 font-size: 1.4rem;
                 display: inline-block;
-                /* 1. 文字自体のグラデーション（左から右に色が変化） */
+                /* 文字自体のグラデーション（左から右に色が変化） */
                 background: linear-gradient(90deg, #ffffff 0%, #00d4ff 100%);
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
                 
-                /* 2. 右下に向かって伸びる光の影（ロンググロー） */
+                /* 右下に向かって伸びる光の影（ロンググロー） */
                 filter: drop-shadow(3px 3px 0.5px rgba(0, 212, 255, 0.2)) 
                         drop-shadow(6px 5px 1px rgba(0, 212, 255, 0.1)) 
                         drop-shadow(10px 8px 2px rgba(0, 212, 255, 0.05));"
@@ -267,7 +267,6 @@ ui <- page_sidebar(
       showcase = bsicons::bs_icon("graph-up-arrow"),
       theme = "secondary"
     ),
-    # 判定フラグボックス
     uiOutput("status_box_ui"),
   )
 )
