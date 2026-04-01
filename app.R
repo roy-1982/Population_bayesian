@@ -278,10 +278,3 @@ server <- function(input, output, session) {
 shinyApp(ui = ui, server = server)
 
 
-# library(rsconnect)
-# 
-# deployApp(
-#   appDir = ".",
-#   appName = "minamiizu-pop-sim", # 既に公開されているアプリ名（URLの一部）
-#   forceUpdate = TRUE
-# )
