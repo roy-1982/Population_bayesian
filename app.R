@@ -71,7 +71,7 @@ ui <- page_sidebar(
       50% { 
         opacity: 0.4; 
         filter: drop-shadow(0 0 10px #ffcc80);
-        transform: scale(1.1); /* 少し大きくするとより目立ちます */
+        transform: scale(1.1); 
       }
       100% { 
         opacity: 1.0; 
