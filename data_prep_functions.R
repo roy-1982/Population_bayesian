@@ -93,7 +93,6 @@ calculate_alpha_params <- function(data1, pop_master, fertility_table) {
 
 # CSV読み込みとデータ成形
 process_local_data <- function(data) {
-  # 1. 人口データの読み込みと成形
   df1 <- read_csv("data/population.csv") 
   df2 <- read_csv("data/life_table.csv")
   
@@ -112,7 +111,7 @@ process_local_data <- function(data) {
   pop_master <- df1_long %>%
     left_join(df2_cleaned, by = c("年齢", "性別"))
   
-  # 2. fertility_table (出生率テーブル) の成形
+  # fertility_table (出生率テーブル) の成形
   fertility_table <- data %>%
     filter(年 == "2023") %>%
     pivot_longer(cols = starts_with("出生率"), names_to = "項目", values_to = "全国出生率_千対") %>%

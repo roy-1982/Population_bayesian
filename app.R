@@ -11,24 +11,20 @@ source("simulation_engine.R")
 
 appId <- Sys.getenv("ESTAT_APPID")
 
-# 1. e-Statから生データを取得
 estat_results <- get_estat_data(appId)
 
-# 2. ローカルデータと成形 (ここで pop_master と fertility_table が作られる)
 local_results <- process_local_data(estat_results$data)
 
 pop_master      <- local_results$pop_master
 fertility_table <- local_results$fertility_table
 df2_cleaned     <- local_results$df2_cleaned
 
-# 3. 補正係数の計算
 alpha_results <- calculate_alpha_params(estat_results$data1, pop_master, fertility_table)
 
 alpha         <- alpha_results$alpha
 alpha_sd_val  <- alpha_results$alpha_sd_val
 target_births <- alpha_results$target_births
 
-# その他の変数
 base_women_2020 <- estat_results$base_women_2020
 edu_growth_base <- estat_results$edu_growth_base
 move_pattern    <- estat_results$move_pattern
@@ -105,9 +101,7 @@ ui <- page_sidebar(
       /*-------------------------------------------------------------/*
     ")),
     
-    # 1. ページの中にオーディオ要素を隠しておく（srcは必ずwwwフォルダ内のファイル名）
     tags$audio(id = "success-sound", src = "success.mp3", type = "audio/mpeg"),
-    # 2. Serverからの命令を受け取って、上のオーディオを再生する
     tags$script(HTML("
       Shiny.addCustomMessageHandler('play_sound', function(message) {
         var audio = document.getElementById('success-sound');
@@ -124,7 +118,7 @@ ui <- page_sidebar(
   
   title = span(
     style = "display: flex; align-items: center; width: 100%; gap: 15px;",
-    # テキスト部分のみサイズ指定
+    
     span("南伊豆町人口予測シミュレーター", 
          style = "font-size: 1.3rem; padding: 10px 0; color: #ffffff; font-family: 'Osaka',sans-serif;"),
     popover(
@@ -221,7 +215,7 @@ ui <- page_sidebar(
     #             min = -2.0, max = 2.0, value = 0, step = 0.1),
     #-------------------------------------------------------------
     tags$div(
-      id = "edu_focus_container", # このIDでCSS制御します
+      id = "edu_focus_container", 
       sliderInput("edu_focus", "教育環境への投資・進学志向レベル", 
                   min = -2.0, max = 2.0, value = 0, step = 0.1)
     ),
@@ -249,13 +243,11 @@ ui <- page_sidebar(
   
   #-------------------------------------------------------------
   # メインコンテンツエリア
-  navset_card_underline( #バリデーション
+  navset_card_underline(
     id = "main_nav",
     title = "分析結果",
     full_screen = TRUE,
-    # 「人口推移」だけは触れるように ID: p1
     nav_panel("人口推移", value = "tab_1", plotOutput("distPlot", height = "500px")),
-    # 他は一括で狙えるように ID を振る
     nav_panel("人口ピラミッド", value = "tab_2", plotOutput("pyramidPlot", height = "500px")),
     nav_panel("消滅可能性分析", value = "tab_3",
               div(style = "position: relative;",
@@ -286,7 +278,6 @@ ui <- page_sidebar(
   )
 )
 
-# この書き方だと切り出した関数の中身を今まさにここに書いているように扱ってくれる
 server <- function(input, output, session) {
   source("server_logic.R", local = TRUE)
 }

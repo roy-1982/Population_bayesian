@@ -55,14 +55,12 @@ evaluate_policy_internal <- function(x) {
     cost_edu <- (x[3])^2 * 500
     return(c(-women + cost_move + cost_alpha + cost_edu, ratio))
   } 
-  # AIが出生率向上ばかり提案してくる場合cost_alphaの係数を2000や3000に。
-  # AIが社会移動ばかり提案してくる場合cost_move <- exp(x[2] * 4) * 15の指数関数の係数を4→5、倍率を15→20に
   
   # 「最適政策バランスを探索」ボタンの動作
   observeEvent(input$find_optimal, {
     # --- ボタン連打防止 ---
     shinyjs::disable("find_optimal")
-    shinyjs::disable("do_sim") # シミュレーションボタンも止める
+    shinyjs::disable("do_sim") 
     on.exit({
       shinyjs::enable("find_optimal")
       shinyjs::enable("do_sim")
@@ -121,7 +119,7 @@ evaluate_policy_internal <- function(x) {
   }
   )
   
-  # 3. 各種入力の監視
+  # 各種入力の監視
   observeEvent(input$n_sim, {
     if (input$n_sim < 10) updateSliderInput(session, "n_sim", value = 10)
   })
@@ -153,14 +151,13 @@ evaluate_policy_internal <- function(x) {
   
   raw_sim_results <- eventReactive(input$do_sim, {
     req(input$n_sim > 0)
-    shinyjs::disable("do_sim")        # ボタンを無効化
+    shinyjs::disable("do_sim")    
     shinyjs::disable("find_optimal")
     on.exit({
       shinyjs::enable("do_sim")
       shinyjs::enable("find_optimal")
     }) 
     
-    # メッセージのリストを用意
     msge_list <- c(
       "結果を計算中...",
       "移住シナリオを検証中...",
@@ -205,7 +202,7 @@ evaluate_policy_internal <- function(x) {
     })
   }, ignoreNULL = FALSE)
   
-  # 2. 統計集計（グラフ描画用）
+  # 統計集計（グラフ描画用）
   summary_df <- reactive({
     req(raw_sim_results())
     dat <- raw_sim_results()$pop 
@@ -289,8 +286,8 @@ evaluate_policy_internal <- function(x) {
       scale_y_continuous(labels = function(x) abs(x)) + 
       scale_fill_manual(
         values = c("M" = "#00d4ff", "F" = "#ff4d88"),
-        breaks = c("M", "F"),               # 並び順を 男(M) -> 女(F) に固定
-        labels = c("M" = "男性", "F" = "女性") # 必要に応じて表示名も日本語に
+        breaks = c("M", "F"),               
+        labels = c("M" = "男性", "F" = "女性")
       ) +
       labs(x = "年齢", y = "人口", fill = NULL) + 
       theme_minimal(base_family = "mplus") +
@@ -369,10 +366,9 @@ evaluate_policy_internal <- function(x) {
                         hover, 
                         xvar = "年", 
                         yvar = "若年女性中央", 
-                        threshold = 8, # 10ピクセル以内に点がないと反応しない
+                        threshold = 8, 
                         maxpoints = 1)
     
-    # 点の近くにいない場合は NULL を返して表示を消す
     if (nrow(point) == 0) return(NULL)
     
     px_x <- hover$coords_img$x

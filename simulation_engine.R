@@ -1,5 +1,5 @@
 
-# 予測関数
+
 predict_pop_stochastic <- function(base_pop, avg_alpha, sd_alpha, move_pattern, f_table, survival_table, periods = 24, move_adj = 0, edu_impact = 0, stochastic = TRUE, edu_growth_base) {
   
   # --- 101要素（0-100歳）のインデックスを作成 ---
@@ -36,7 +36,6 @@ predict_pop_stochastic <- function(base_pop, avg_alpha, sd_alpha, move_pattern, 
   f_move[pmin(f_move_raw$年齢 + 1, 101)] <- f_move_raw$move_per_age
   
   # --- 教育トレードオフの適用 ---
-  # 1. Brain Drain: 進学率UPによる18歳の流出加速。スライダーが1のとき、過去20年の進学率上昇分と同じ強さの流出圧力を加える
   # (南伊豆の規模に合わせて係数250で調整)
   drain_val <- edu_growth_base * edu_impact * 250
   m_move[19] <- m_move[19] - drain_val
@@ -46,10 +45,9 @@ predict_pop_stochastic <- function(base_pop, avg_alpha, sd_alpha, move_pattern, 
   attract_val <- (drain_val * 0.4)
   
   # --- 正規分布による重み付け関数の定義 ---
-  # mean_age: ピークとなる年齢, sd: 広がり具合
   get_norm_weight <- function(ages, mean_age, sd) {
     w <- dnorm(ages, mean = mean_age, sd = sd)
-    return(w / sum(w)) # 合計を1に正規化
+    return(w / sum(w)) 
   }
   
   # 親世代(30-45歳)の流入：35歳をピークに設定
@@ -68,7 +66,7 @@ predict_pop_stochastic <- function(base_pop, avg_alpha, sd_alpha, move_pattern, 
   
   
   adj_vec <- numeric(101)
-  adj_vec[21:40] <- move_adj # 20-39歳に調整適用
+  adj_vec[21:40] <- move_adj 
   
   res_list <- vector("list", periods)
   fac_list <- vector("list", periods)
